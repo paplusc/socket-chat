@@ -1,8 +1,8 @@
-# Notas:
+# Notes:
 
-Este es un pequeño servidor de express listo para ejecutarse y servir la carpeta public en la web.
+A simple chat service using socket in nodejs
 
-Recuerden que deben de reconstruir los módulos de node con el comando
+Remember you must rebuild the node_modules with this command:
 
 ```
 npm install
