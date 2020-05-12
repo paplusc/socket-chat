@@ -20,20 +20,22 @@ io.on('connection', (client) => {
         users.addUser(client.id, user.name, user.room);
 
         client.broadcast.to(user.room).emit('listUsers', users.getUsersByRoom(user.room));
+        client.broadcast.to(user.room).emit('sendMessage', sendMessage('Admin', `${user.name} joined`))
         callback(users.getUsersByRoom(user.room));
 
     });
 
     client.on('disconnect', () => {
         let deletedUser = users.deleteUser(client.id);
-        client.broadcast.to(deletedUser.room).emit('sendMessage', sendMessage('Admin', `${deletedUser.name} left!`))
+        client.broadcast.to(deletedUser.room).emit('sendMessage', sendMessage('Admin', `${deletedUser.name} left`))
         client.broadcast.to(deletedUser.room).emit('listUsers', users.getUsersByRoom(deletedUser.room));
     });
 
-    client.on('sendMessage', (data) => {
-        let user = users.getUsers(client.id);
+    client.on('sendMessage', (data, callback) => {
+        let user = users.getUserById(client.id);
         let message = sendMessage(user.name, data.message);
         client.broadcast.to(user.room).emit('sendMessage', message);
+        callback(message);
     });
 
     client.on('directMessage', (data) => {
